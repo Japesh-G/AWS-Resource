@@ -16,10 +16,10 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
 ## @type: DataSource
-## @args: [database = "redshifttos3", table_name = "dev_public_dataaxle", redshift_tmp_dir = TempDir, transformation_ctx = "datasource0"]
+## @args: [database = "redshifttos3", table_name = "dev_public_tablename", redshift_tmp_dir = TempDir, transformation_ctx = "datasource0"]
 ## @return: datasource0
 ## @inputs: []
-datasource0 = glueContext.create_dynamic_frame.from_catalog(database = "redshifttos3", table_name = "dev_public_dataaxle", redshift_tmp_dir = args["TempDir"], transformation_ctx = "datasource0")
+datasource0 = glueContext.create_dynamic_frame.from_catalog(database = "redshifttos3", table_name = "dev_public_tablename", redshift_tmp_dir = args["TempDir"], transformation_ctx = "datasource0")
 ## @type: ApplyMapping
 ## @args: [mapping = [("year", "int", "year", "int"), ("rating", "double", "rating", "double"), ("rank", "int", "rank", "int"), ("movie_title", "string", "movie_title", "string")], transformation_ctx = "applymapping1"]
 ## @return: applymapping1
@@ -36,7 +36,7 @@ applymapping1 = ApplyMapping.apply(frame = datasource0, mappings = [("year", "in
 
 repartition = applymapping1.repartition(1)
 # repartition.toDF().write.fomat("csv").save("s3://seriousdata/writting/arpit.csv")
-repartition.toDF().write.mode("overwrite").option("header",True).csv('s3://seriousdata/writting/dataaxle')
+repartition.toDF().write.mode("overwrite").option("header",True).csv('s3://seriousdata/writting/foldername')
 # datasink2 = glueContext.write_dynamic_frame.from_options(frame = repartition, connection_type = "s3", connection_options = {"path": "s3://seriousdata/writting/ar.csv"}, format = "csv", transformation_ctx = "datasink2")
 import boto3
 client = boto3.client('s3')
